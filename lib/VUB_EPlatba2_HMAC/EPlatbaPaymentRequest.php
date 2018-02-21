@@ -5,7 +5,6 @@ namespace EPayment\VUB_EPlatba2_HMAC;
 use EPayment\EPaymentException;
 use EPayment\EPaymentHmacSignedMessage;
 use EPayment\Interfaces\IEPaymentHttpPostPaymentRequest;
-use EvInOrder;
 use Exception;
 
 class EPlatbaPaymentRequest extends EPaymentHmacSignedMessage implements IEPaymentHttpPostPaymentRequest

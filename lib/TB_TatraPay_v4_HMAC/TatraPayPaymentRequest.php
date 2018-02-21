@@ -18,12 +18,6 @@ class TatraPayPaymentRequest extends EPaymentHmacSignedMessage implements IEPaym
 
     private $redirectUrlBase = self::URL_BASE;
 
-    /**
-     * CardPayPaymentRequest constructor.
-     * @param EvInOrder $EV_IN_ORDER
-     * @param string $language
-     * @throws EPaymentException
-     */
     public function __construct()
     {
         $this->readOnlyFields = array('HMAC');

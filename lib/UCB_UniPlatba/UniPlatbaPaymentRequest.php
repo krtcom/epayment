@@ -5,7 +5,6 @@ namespace EPayment\UCB_UniPlatba;
 use EPayment\EPaymentDesSignedMessage;
 use EPayment\EPaymentException;
 use EPayment\Interfaces\IEPaymentHttpRedirectPaymentRequest;
-use EvInOrder;
 use Exception;
 
 class UniPlatbaPaymentRequest extends EPaymentDesSignedMessage implements IEPaymentHttpRedirectPaymentRequest
