@@ -1,0 +1,22 @@
+{
+  "name": "krtcom/epayment",
+  "description": "PHP payments for selected, most used banks in Slovakia",
+  "type": "library",
+  "license": "LGPL",
+  "authors": [
+    {
+      "name": "Michal Krnáč",
+      "email": "krtcom@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=5.6.0"
+  },
+  "autoload": {
+    "psr-0": {
+      "EPayment\\": "lib/",
+      "EPayments\\": "src/"
+    }
+  }
+}
