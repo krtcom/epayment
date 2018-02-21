@@ -51,7 +51,10 @@ class VUB_EPlatba extends Payment
 
         $request->signMessage(EPAYMENT_VUB_EPLATBA_SECRET);
 
-        return $request->getPaymentRequestFields();
+        return [
+            'action' => $request->getUrlBase(),
+            'fields' => $request->getPaymentRequestFields()
+        ];
     }
 
     /**
