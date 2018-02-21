@@ -1,6 +1,6 @@
 {
   "name": "krtcom/epayment",
-  "description": "PHP payments for selected, most used banks in Slovakia",
+  "description": "Online payments for selected banks in Slovakia implemented in PHP",
   "type": "library",
   "license": "LGPL",
   "authors": [
