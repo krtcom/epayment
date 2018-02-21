@@ -12,21 +12,10 @@ class SLSP_SporoPay extends Payment
 
     /**
      * SLSP_SporoPay constructor.
-     * @param null $amount
-     * @param null $variableSymbol
-     * @param null $returnUrl
-     * @param null $name
-     * @param null $language
      * @throws EPaymentException
      */
-    public function __construct($amount, $variableSymbol, $returnUrl = null, $name = null, $language = null)
+    public function __construct()
     {
-        parent::__construct($amount, $variableSymbol, $returnUrl, $name, $language);
-
-        if (!defined('EPAYMENT_SLSP_SPOROPAY_SECRET')) {
-            throw new EPaymentException('EPAYMENT_SLSP_SPOROPAY_SECRET is not defined');
-        }
-
         if (!defined('EPAYMENT_SLSP_SPOROPAY_SECRET')) {
             throw new EPaymentException('EPAYMENT_SLSP_SPOROPAY_SECRET is not defined');
         }
@@ -41,19 +30,24 @@ class SLSP_SporoPay extends Payment
     }
 
     /**
+     * @param $amount
+     * @param $variableSymbol
+     * @param null $returnUrl
+     * @param null $name
+     * @param null $language
      * @return string
      * @throws EPaymentException
      */
-    function request()
+    function request($amount, $variableSymbol, $returnUrl = null, $name = null, $language = null)
     {
         $request = new SporoPayPaymentRequest();
 
         $request->pu_predcislo = EPAYMENT_SLSP_SPOROPAY_PU_PREDCISLO;
         $request->pu_cislo = EPAYMENT_SLSP_SPOROPAY_PU_CISLO;
-        $request->suma = sprintf("%01.2f", $this->amount);
-        $request->vs = $this->variableSymbol;
+        $request->suma = sprintf("%01.2f", $amount);
+        $request->vs = $variableSymbol;
         $request->ss = '0308';
-        $request->url = $this->returnUrl;
+        $request->url = $returnUrl;
         $request->param = '';
 
         $request->validate();
@@ -64,13 +58,14 @@ class SLSP_SporoPay extends Payment
     }
 
     /**
+     * @param null $fields
      * @return int
      * @throws EPaymentException
      */
-    function response()
+    function response($fields = null)
     {
 
-        $response = new SporoPayPaymentHttpResponse();
+        $response = new SporoPayPaymentHttpResponse($fields);
 
         $response->validate();
 

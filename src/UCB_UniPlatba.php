@@ -12,17 +12,10 @@ class UCB_UniPlatba extends Payment
 
     /**
      * UCB_UniPlatba constructor.
-     * @param null $amount
-     * @param null $variableSymbol
-     * @param null $returnUrl
-     * @param null $name
-     * @param null $language
      * @throws EPaymentException
      */
-    public function __construct($amount, $variableSymbol, $returnUrl = null, $name = null, $language = null)
+    public function __construct()
     {
-        parent::__construct($amount, $variableSymbol, $returnUrl, $name, $language);
-
         if (!defined('EPAYMENT_UCB_UNIPLATBA_MID')) {
             throw new EPaymentException('EPAYMENT_UCB_UNIPLATBA_MID is not defined');
         }
@@ -30,25 +23,29 @@ class UCB_UniPlatba extends Payment
         if (!defined('EPAYMENT_UCB_UNIPLATBA_SECRET')) {
             throw new EPaymentException('EPAYMENT_UCB_UNIPLATBA_SECRET is not defined');
         }
-
     }
 
     /**
+     * @param $amount
+     * @param $variableSymbol
+     * @param null $returnUrl
+     * @param null $name
+     * @param null $language
      * @return string
      * @throws EPaymentException
      */
-    function request()
+    function request($amount, $variableSymbol, $returnUrl = null, $name = null, $language = null)
     {
         $request = new UniPlatbaPaymentRequest();
 
         $request->MID = EPAYMENT_UCB_UNIPLATBA_MID;
 
-        if (in_array(strtoupper($this->language), UniPlatbaPaymentRequest::VALID_LANGUAGES)) {
-            $request->LNG = strtoupper($this->language);
+        if (in_array(strtoupper($language), UniPlatbaPaymentRequest::VALID_LANGUAGES)) {
+            $request->LNG = strtoupper($language);
         }
 
-        $request->AMT = sprintf("%01.2f", $this->amount);
-        $request->VS = $this->variableSymbol;
+        $request->AMT = sprintf("%01.2f", $amount);
+        $request->VS = $variableSymbol;
         $request->CS = '0308';
 
         $request->validate();
@@ -59,13 +56,14 @@ class UCB_UniPlatba extends Payment
     }
 
     /**
+     * @param null $fields
      * @return int
      * @throws EPaymentException
      */
-    function response()
+    function response($fields = null)
     {
 
-        $response = new UniPlatbaPaymentHttpResponse();
+        $response = new UniPlatbaPaymentHttpResponse($fields);
 
         $response->validate();
 

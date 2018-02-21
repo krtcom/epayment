@@ -43,6 +43,8 @@ abstract class EPaymentMessage
     }
 
     /**
+     * @param $sharedSecret
+     * @return
      * @throws EPaymentException
      */
     public abstract function computeSign($sharedSecret);

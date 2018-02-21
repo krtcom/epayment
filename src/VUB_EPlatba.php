@@ -12,17 +12,10 @@ class VUB_EPlatba extends Payment
 
     /**
      * VUB_EPlatba constructor.
-     * @param null $amount
-     * @param null $variableSymbol
-     * @param null $returnUrl
-     * @param null $name
-     * @param null $language
      * @throws EPaymentException
      */
-    public function __construct($amount, $variableSymbol, $returnUrl = null, $name = null, $language = null)
+    public function __construct()
     {
-        parent::__construct($amount, $variableSymbol, $returnUrl, $name, $language);
-
         if (!defined('EPAYMENT_VUB_EPLATBA_MID')) {
             throw new EPaymentException('EPAYMENT_VUB_EPLATBA_MID is not defined');
         }
@@ -30,22 +23,26 @@ class VUB_EPlatba extends Payment
         if (!defined('EPAYMENT_VUB_EPLATBA_SECRET')) {
             throw new EPaymentException('EPAYMENT_VUB_EPLATBA_SECRET is not defined');
         }
-
     }
 
     /**
+     * @param $amount
+     * @param $variableSymbol
+     * @param null $returnUrl
+     * @param null $name
+     * @param null $language
      * @return array
      * @throws EPaymentException
      */
-    function request()
+    function request($amount, $variableSymbol, $returnUrl = null, $name = null, $language = null)
     {
         $request = new EPlatbaPaymentRequest();
 
         $request->MID = EPAYMENT_VUB_EPLATBA_MID;
-        $request->AMT = sprintf("%01.2f", $this->amount);
-        $request->VS = $this->variableSymbol;
+        $request->AMT = sprintf("%01.2f", $amount);
+        $request->VS = $variableSymbol;
         $request->CS = '0308';
-        $request->RURL = $this->returnUrl;
+        $request->RURL = $returnUrl;
 
         $request->validate();
 
@@ -58,13 +55,14 @@ class VUB_EPlatba extends Payment
     }
 
     /**
+     * @param null $fields
      * @return int
      * @throws EPaymentException
      */
-    function response()
+    function response($fields = null)
     {
 
-        $response = new EPlatbaPaymentHttpResponse();
+        $response = new EPlatbaPaymentHttpResponse($fields);
 
         $response->validate();
 
