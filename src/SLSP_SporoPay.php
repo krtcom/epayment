@@ -30,24 +30,25 @@ class SLSP_SporoPay extends Payment
     }
 
     /**
-     * @param $amount
-     * @param $variableSymbol
-     * @param null $returnUrl
-     * @param null $name
-     * @param null $language
+     * @param PaymentObject $paymentObject
+     * @param null $endpoint
      * @return string
      * @throws EPaymentException
      */
-    function request($amount, $variableSymbol, $returnUrl = null, $name = null, $language = null)
+    function request(PaymentObject $paymentObject, $endpoint = null)
     {
         $request = new SporoPayPaymentRequest();
 
+        if ($endpoint) {
+            $request->setRedirectUrlBase($endpoint);
+        }
+
         $request->pu_predcislo = EPAYMENT_SLSP_SPOROPAY_PU_PREDCISLO;
         $request->pu_cislo = EPAYMENT_SLSP_SPOROPAY_PU_CISLO;
-        $request->suma = sprintf("%01.2f", $amount);
-        $request->vs = $variableSymbol;
+        $request->suma = sprintf("%01.2f", $paymentObject->amount);
+        $request->vs = $paymentObject->variableSymbol;
         $request->ss = '0308';
-        $request->url = $returnUrl;
+        $request->url = $paymentObject->returnUrl;
         $request->param = '';
 
         $request->validate();

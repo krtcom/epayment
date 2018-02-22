@@ -26,26 +26,27 @@ class UCB_UniPlatba extends Payment
     }
 
     /**
-     * @param $amount
-     * @param $variableSymbol
-     * @param null $returnUrl
-     * @param null $name
-     * @param null $language
+     * @param PaymentObject $paymentObject
+     * @param null $endpoint
      * @return string
      * @throws EPaymentException
      */
-    function request($amount, $variableSymbol, $returnUrl = null, $name = null, $language = null)
+    function request(PaymentObject $paymentObject, $endpoint = null)
     {
         $request = new UniPlatbaPaymentRequest();
 
-        $request->MID = EPAYMENT_UCB_UNIPLATBA_MID;
-
-        if (in_array(strtoupper($language), UniPlatbaPaymentRequest::VALID_LANGUAGES)) {
-            $request->LNG = strtoupper($language);
+        if ($endpoint) {
+            $request->setRedirectUrlBase($endpoint);
         }
 
-        $request->AMT = sprintf("%01.2f", $amount);
-        $request->VS = $variableSymbol;
+        $request->MID = EPAYMENT_UCB_UNIPLATBA_MID;
+
+        if (in_array(strtoupper($paymentObject->language), UniPlatbaPaymentRequest::VALID_LANGUAGES)) {
+            $request->LNG = strtoupper($paymentObject->language);
+        }
+
+        $request->AMT = sprintf("%01.2f", $paymentObject->amount);
+        $request->VS = $paymentObject->variableSymbol;
         $request->CS = '0308';
 
         $request->validate();

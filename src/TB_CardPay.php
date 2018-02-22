@@ -27,17 +27,18 @@ class TB_CardPay extends Payment
     }
 
     /**
-     * @param $amount
-     * @param $variableSymbol
-     * @param null $returnUrl
-     * @param null $name
-     * @param null $language
+     * @param PaymentObject $paymentObject
+     * @param null $endpoint
      * @return string
      * @throws EPaymentException
      */
-    function request($amount, $variableSymbol, $returnUrl = null, $name = null, $language = null)
+    function request(PaymentObject $paymentObject, $endpoint = null)
     {
         $request = new CardPayPaymentRequest();
+
+        if ($endpoint) {
+            $request->setRedirectUrlBase($endpoint);
+        }
 
         $REMOTE_ADDR = '1.2.3.4';
 
@@ -46,14 +47,14 @@ class TB_CardPay extends Payment
         }
         
         $request->MID = EPAYMENT_TB_CARDPAY_MID;
-        $request->AMT = sprintf("%01.2f", $amount);
+        $request->AMT = sprintf("%01.2f", $paymentObject->amount);
         $request->CURR = "978";
-        $request->VS = $variableSymbol;
-        $request->RURL = $returnUrl;
+        $request->VS = $paymentObject->variableSymbol;
+        $request->RURL = $paymentObject->returnUrl;
         $request->IPC = $REMOTE_ADDR;
 
         $transliterator = Transliterator::create("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC;");
-        $name = trim($transliterator->transliterate($name));
+        $name = trim($transliterator->transliterate($paymentObject->name));
         if (mb_strlen($name) > 30) {
             $name = mb_substr($name, 0, 30);
         }
@@ -61,8 +62,8 @@ class TB_CardPay extends Payment
         $request->NAME = $name;
         $request->TIMESTAMP = gmdate("dmYHis");
 
-        if (in_array($language, CardPayPaymentRequest::VALID_LANGUAGES)) {
-            $request->LANG = $language;
+        if (in_array($paymentObject->language, CardPayPaymentRequest::VALID_LANGUAGES)) {
+            $request->LANG = $paymentObject->language;
         }
 
         $request->validate();

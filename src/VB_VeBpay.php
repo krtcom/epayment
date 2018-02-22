@@ -26,24 +26,25 @@ class VB_VeBpay extends Payment
     }
 
     /**
-     * @param $amount
-     * @param $variableSymbol
-     * @param null $returnUrl
-     * @param null $name
-     * @param null $language
+     * @param PaymentObject $paymentObject
+     * @param null $endpoint
      * @return string
      * @throws EPaymentException
      */
-    function request($amount, $variableSymbol, $returnUrl = null, $name = null, $language = null)
+    function request(PaymentObject $paymentObject, $endpoint = null)
     {
 
         $request = new VeBpayPaymentRequest();
 
+        if ($endpoint) {
+            $request->setRedirectUrlBase($endpoint);
+        }
+
         $request->MID = EPAYMENT_VB_VEBPAY_MID;
-        $request->AMT = sprintf("%01.2f", $amount);
-        $request->VS = $variableSymbol;
+        $request->AMT = sprintf("%01.2f", $paymentObject->amount);
+        $request->VS = $paymentObject->variableSymbol;
         $request->CS = '0308';
-        $request->RURL = $returnUrl;
+        $request->RURL = $paymentObject->returnUrl;
 
         $request->validate();
 

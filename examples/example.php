@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use EPayments\PaymentObject;
 use EPayments\TB_CardPay;
 
 define('EPAYMENT_TB_CARDPAY_MID', "9999");
@@ -9,4 +10,6 @@ define('EPAYMENT_TB_CARDPAY_SECRET', "313233343536373839303132333435363738393031
 
 $payment = new TB_CardPay();
 
-echo $payment->request(6.5, '123456', 'https://www.example.com', 'Michal Krnáč');
+$po = new PaymentObject(6.5, '123456', 'https://www.example.com', 'Jožko Mrkvička');
+
+echo $payment->request($po);

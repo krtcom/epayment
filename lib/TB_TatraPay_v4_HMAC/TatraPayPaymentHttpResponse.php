@@ -99,7 +99,7 @@ RDoX4sTMmmdiIrpmCZD4CLDtP0j2LfD7saSIc8kZUwfILg==
         }
 
         if ($this->RES == "TOUT") {
-            return IEPaymentHttpPaymentResponse::RESPONSE_UNKNOWN;
+            return IEPaymentHttpPaymentResponse::RESPONSE_TIMEOUT;
         }
 
         return IEPaymentHttpPaymentResponse::RESPONSE_FAIL;

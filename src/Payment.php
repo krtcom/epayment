@@ -15,15 +15,12 @@ abstract class Payment
     abstract public function __construct();
 
     /**
-     * @param $amount
-     * @param $variableSymbol
-     * @param null $returnUrl
-     * @param null $name
-     * @param null $language
-     * @return string | array
+     * @param PaymentObject $paymentObject
+     * @param null $endpoint
+     * @return mixed
      * @throws EPaymentException
      */
-    abstract function request($amount, $variableSymbol, $returnUrl = null, $name = null, $language = null);
+    abstract function request(PaymentObject $paymentObject, $endpoint = null);
 
     /**
      * @param null $fields

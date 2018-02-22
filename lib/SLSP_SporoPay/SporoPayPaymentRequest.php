@@ -9,8 +9,8 @@ use Exception;
 
 class SporoPayPaymentRequest extends EPayment3DesSignedMessage implements IEPaymentHttpRedirectPaymentRequest
 {
-    const SporoPay_EPayment_URL_Base = "https://ib.slsp.sk/epayment/epayment/epayment.xml";
-    private $redirectUrlBase = self::SporoPay_EPayment_URL_Base;
+    const URL_BASE = "https://ib.slsp.sk/epayment/epayment/epayment.xml";
+    private $redirectUrlBase = self::URL_BASE;
 
     public function __construct()
     {

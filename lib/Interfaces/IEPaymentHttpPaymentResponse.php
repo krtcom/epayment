@@ -29,5 +29,7 @@ interface IEPaymentHttpPaymentResponse {
     const RESPONSE_SUCCESS = 1;
     const RESPONSE_FAIL    = 2;
     const RESPONSE_TIMEOUT = 3;
-    const RESPONSE_UNKNOWN = 4;
+    const RESPONSE_PENDING = 4;
+    const RESPONSE_AUTHORIZED = 5;
+
 }
