@@ -1,6 +1,6 @@
 <?php
 
-namespace EPayment;
+namespace EPayment\Ecomm;
 
 
 class EcommMerchant

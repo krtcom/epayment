@@ -3,7 +3,7 @@
 namespace EPayments;
 
 
-use EPayment\EcommMerchant;
+use EPayment\Ecomm\EcommMerchant;
 use EPayment\EPaymentException;
 use EPayment\Interfaces\IEPaymentHttpPaymentResponse;
 
