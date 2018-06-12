@@ -47,7 +47,7 @@ class PB_iTerminal extends Payment
     function request(PaymentObject $paymentObject, $endpoint = null)
     {
 
-        $merchant = new EcommMerchant($this->url . '/ecomm/MerchantHandler', $this->keystore, $this->keystorepassword, $this->verbose);
+        $merchant = new EcommMerchant($this->url . ':8443/ecomm/MerchantHandler', $this->keystore, $this->keystorepassword, $this->verbose);
 
         $client_ip = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : null;
 
