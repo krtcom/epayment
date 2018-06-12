@@ -31,26 +31,18 @@ class EcommMerchant
      * @access private
      * @var boolean
      */
-    private $verbose;
+    private $verbose = false;
 
-
-    /**
-     * Constructor sets up {$link, $keystore, $keystorepassword, $verbose}
-     * @param string $url url to declare
-     * @param string $keystore value of the keystore
-     * @param string $keystorepassword value of the keystorepassword
-     * @param boolean $verbose TRUE to output verbose information. Writes output to STDERR, or the file specified using CURLOPT_STDERR.
-     */
-    function __construct($url, $keystore, $keystorepassword, $verbose = 0)
+    function __construct($url, $keystore, $keystore_password, $verbose = 0)
     {
         $this->url = $url;
         $this->keystore = $keystore;
-        $this->keystorepassword = $keystorepassword;
+        $this->keystorepassword = $keystore_password;
         $this->verbose = $verbose;
     }
 
     /**
-     * Registering of SMS transaction
+     * Registering of DMS authorisation
      * @param int $amount transaction amount in minor units, mandatory
      * @param int $currency transaction currency code, mandatory
      * @param string $ip client’s IP address, mandatory
@@ -59,16 +51,17 @@ class EcommMerchant
      * @return string TRANSACTION_ID
      */
 
-    function startSMSTrans($amount, $currency, $ip, $desc, $language)
+    function startDMSAuth($amount, $currency, $ip, $desc, $language)
     {
 
         $params = array(
-            'command' => 'v',
+            'command' => 'a',
+            'msg_type' => 'DMS',
             'amount' => $amount,
             'currency' => $currency,
             'client_ip_addr' => $ip,
             'description' => $desc,
-            'language' => $language
+
         );
         return $this->sentPost($params);
     }
@@ -116,31 +109,6 @@ class EcommMerchant
         }
         curl_close($curl);
         return $result;
-    }
-
-    /**
-     * Registering of DMS authorisation
-     * @param int $amount transaction amount in minor units, mandatory
-     * @param int $currency transaction currency code, mandatory
-     * @param string $ip client’s IP address, mandatory
-     * @param string $desc description of transaction, optional
-     * @param string $language authorization language identificator, optional
-     * @return string TRANSACTION_ID
-     */
-
-    function startDMSAuth($amount, $currency, $ip, $desc, $language)
-    {
-
-        $params = array(
-            'command' => 'a',
-            'msg_type' => 'DMS',
-            'amount' => $amount,
-            'currency' => $currency,
-            'client_ip_addr' => $ip,
-            'description' => $desc,
-
-        );
-        return $this->sentPost($params);
     }
 
     /**
@@ -226,5 +194,28 @@ class EcommMerchant
         $str = $this->sentPost($params);
         return $str;
 
+    }
+
+    /**
+     * Registering of SMS transaction
+     * @param int $amount transaction amount in minor units, mandatory
+     * @param int $currency transaction currency code, mandatory
+     * @param string $ip client’s IP address, mandatory
+     * @param string $desc description of transaction, optional
+     * @param string $language authorization language identificator, optional
+     * @return string TRANSACTION_ID
+     */
+    function startSMSTrans($amount, $currency, $ip, $desc, $language)
+    {
+
+        $params = array(
+            'command' => 'v',
+            'amount' => $amount,
+            'currency' => $currency,
+            'client_ip_addr' => $ip,
+            'description' => $desc,
+            'language' => $language
+        );
+        return $this->sentPost($params);
     }
 }
