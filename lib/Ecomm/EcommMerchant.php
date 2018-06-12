@@ -205,7 +205,7 @@ class EcommMerchant
      * @param string $language authorization language identificator, optional
      * @return string TRANSACTION_ID
      */
-    function startSMSTrans($amount, $currency, $ip, $desc, $language)
+    function startSMSTrans($amount, $currency, $ip, $desc, $language, $account)
     {
 
         $params = array(
@@ -214,7 +214,8 @@ class EcommMerchant
             'currency' => $currency,
             'client_ip_addr' => $ip,
             'description' => $desc,
-            'language' => $language
+            'language' => $language,
+            'account' => $account
         );
         return $this->sentPost($params);
     }
