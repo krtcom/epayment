@@ -102,7 +102,7 @@ class CardPayPaymentRequest extends EPaymentHmacSignedMessage implements IEPayme
             }
 
         } catch (Exception $e) {
-            throw new EpaymentException($e->getMessage());
+            throw new EPaymentException($e->getMessage());
         }
     }
 }
