@@ -9,7 +9,8 @@ use EPayment\Interfaces\IEPaymentHttpPaymentResponse;
 
 class PB_iTerminal extends Payment
 {
-    private $url;
+    private $ecommServerUrl;
+    private $ecommClientUrl;
     private $keystore;
     private $keystorepassword;
     private $verbose = 0;
@@ -17,8 +18,12 @@ class PB_iTerminal extends Payment
     function __construct()
     {
 
-        if (!defined('EPAYMENT_ECOMM_MERCHANT_URL')) {
-            throw new EPaymentException('EPAYMENT_ECOMM_MERCHANT_URL is not defined');
+        if (!defined('EPAYMENT_ECOMM_MERCHANT_SERVER_URL')) {
+            throw new EPaymentException('EPAYMENT_ECOMM_MERCHANT_SERVER_URL is not defined');
+        }
+
+        if (!defined('EPAYMENT_ECOMM_MERCHANT_CLIENT_URL')) {
+            throw new EPaymentException('EPAYMENT_ECOMM_MERCHANT_CLIENT_URL is not defined');
         }
 
         if (!defined('EPAYMENT_ECOMM_MERCHANT_KEYSTORE')) {
@@ -29,7 +34,8 @@ class PB_iTerminal extends Payment
             throw new EPaymentException('EPAYMENT_ECOMM_MERCHANT_KEYSTOREPASSWORD is not defined');
         }
 
-        $this->url = EPAYMENT_ECOMM_MERCHANT_URL;
+        $this->ecommServerUrl = EPAYMENT_ECOMM_MERCHANT_SERVER_URL;
+        $this->ecommClientUrl = EPAYMENT_ECOMM_MERCHANT_CLIENT_URL;
         $this->keystore = EPAYMENT_ECOMM_MERCHANT_KEYSTORE;
         $this->keystorepassword = EPAYMENT_ECOMM_MERCHANT_KEYSTOREPASSWORD;
 
@@ -47,7 +53,7 @@ class PB_iTerminal extends Payment
     function request(PaymentObject $paymentObject, $endpoint = null)
     {
 
-        $merchant = new EcommMerchant($this->url . ':8443/ecomm/MerchantHandler', $this->keystore, $this->keystorepassword, $this->verbose);
+        $merchant = new EcommMerchant($this->ecommServerUrl, $this->keystore, $this->keystorepassword, $this->verbose);
 
         $client_ip = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : null;
 
@@ -62,7 +68,7 @@ class PB_iTerminal extends Payment
         }
 
         $trans_id = urlencode(substr($resp, 16, 28));
-        return $this->url . "/ecomm/ClientHandler?trans_id=$trans_id";
+        return $this->ecommClientUrl . "?trans_id=$trans_id";
     }
 
     /**
@@ -85,7 +91,7 @@ class PB_iTerminal extends Payment
 
         $client_ip = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : null;
 
-        $merchant = new EcommMerchant($this->url . '/ecomm/MerchantHandler', $this->keystore, $this->keystorepassword, $this->verbose);
+        $merchant = new EcommMerchant($this->ecommServerUrl, $this->keystore, $this->keystorepassword, $this->verbose);
         $resp = $merchant->getTransResult(urlencode($trans_id), $client_ip);
 
         $responseRows = preg_split("/\r\n|\n|\r/", $resp);
