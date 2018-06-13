@@ -73,12 +73,20 @@ class PB_iTerminal extends Payment
     function response($fields = null)
     {
 
+        if ($fields == null) {
+            $fields = $_POST;
+        }
+
         $trans_id = $fields['trans_id'];
+
+        if ($fields['error']) {
+            throw new EPaymentException($fields['error']);
+        }
 
         $client_ip = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : null;
 
         $merchant = new EcommMerchant($this->url . '/ecomm/MerchantHandler', $this->keystore, $this->keystorepassword, $this->verbose);
-        $resp = $merchant->getTransResult($trans_id, $client_ip);
+        $resp = $merchant->getTransResult(urlencode($trans_id), $client_ip);
 
         $responseRows = preg_split("/\r\n|\n|\r/", $resp);
         foreach ($responseRows as $responseRow) {
@@ -92,11 +100,11 @@ class PB_iTerminal extends Payment
                     case 'DECLINED':
                     case 'REVERSED':
                         return IEPaymentHttpPaymentResponse::RESPONSE_FAIL;
-                    break;
+                        break;
                     case 'TIMEOUT':
                         return IEPaymentHttpPaymentResponse::RESPONSE_TIMEOUT;
                     case 'PENDING':
-                    return IEPaymentHttpPaymentResponse::RESPONSE_PENDING;
+                        return IEPaymentHttpPaymentResponse::RESPONSE_PENDING;
                         break;
                 }
             }
