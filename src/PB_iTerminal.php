@@ -57,17 +57,17 @@ class PB_iTerminal extends Payment
 
         $client_ip = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : null;
 
-        $resp = $merchant->startSMSTrans((int)($paymentObject->amount * 100), 978, $client_ip, $paymentObject->name, $paymentObject->language, $paymentObject->variableSymbol);
+        $responseObject = $merchant->startSMSTrans((int)($paymentObject->amount * 100), 978, $client_ip, $paymentObject->name, $paymentObject->language, $paymentObject->variableSymbol);
 
-        if (substr($resp, 0, 14) != "TRANSACTION_ID") {
+        if (empty($responseObject->TRANSACTION_ID)) {
             $error = "Response error: Unknown TRANSACTION_ID.";
             if (defined("EPAYMENT_DEBUG") && EPAYMENT_DEBUG) {
-                $error .= " [$resp]";
+                $error .= " [". print_r($responseObject, true)."]";
             }
             throw new EPaymentException($error);
         }
 
-        $trans_id = urlencode(substr($resp, 16, 28));
+        $trans_id = urlencode($responseObject->TRANSACTION_ID);
         return $this->ecommClientUrl . "?trans_id=$trans_id";
     }
 
@@ -85,35 +85,29 @@ class PB_iTerminal extends Payment
 
         $trans_id = $fields['trans_id'];
 
-        if ($fields['error']) {
-            throw new EPaymentException($fields['error']);
-        }
-
         $client_ip = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : null;
 
         $merchant = new EcommMerchant($this->ecommServerUrl, $this->keystore, $this->keystorepassword, $this->verbose);
-        $resp = $merchant->getTransResult(urlencode($trans_id), $client_ip);
+        $responseObject = $merchant->getTransResult(urlencode($trans_id), $client_ip);
 
-        $responseRows = preg_split("/\r\n|\n|\r/", $resp);
-        foreach ($responseRows as $responseRow) {
-            list($key, $value) = array_map('trim', explode(":", $responseRow));
-            if ($key == 'RESULT') {
-                switch($value) {
-                    case 'OK':
-                        return IEPaymentHttpPaymentResponse::RESPONSE_SUCCESS;
-                        break;
-                    case 'FAILED':
-                    case 'DECLINED':
-                    case 'REVERSED':
-                        return IEPaymentHttpPaymentResponse::RESPONSE_FAIL;
-                        break;
-                    case 'TIMEOUT':
-                        return IEPaymentHttpPaymentResponse::RESPONSE_TIMEOUT;
-                    case 'PENDING':
-                        return IEPaymentHttpPaymentResponse::RESPONSE_PENDING;
-                        break;
-                }
-            }
+        if (defined("EPAYMENT_DEBUG") && EPAYMENT_DEBUG) {
+            var_dump($fields, $responseObject); exit;
+        }
+
+        switch($responseObject->RESULT) {
+            case 'OK':
+                return IEPaymentHttpPaymentResponse::RESPONSE_SUCCESS;
+                break;
+            case 'FAILED':
+            case 'DECLINED':
+            case 'REVERSED':
+                return IEPaymentHttpPaymentResponse::RESPONSE_FAIL;
+                break;
+            case 'TIMEOUT':
+                return IEPaymentHttpPaymentResponse::RESPONSE_TIMEOUT;
+            case 'PENDING':
+                return IEPaymentHttpPaymentResponse::RESPONSE_PENDING;
+                break;
         }
         return IEPaymentHttpPaymentResponse::RESPONSE_FAIL;
     }

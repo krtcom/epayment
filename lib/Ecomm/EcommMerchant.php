@@ -108,7 +108,15 @@ class EcommMerchant
             error_log($result);
         }
         curl_close($curl);
-        return $result;
+
+        $resultObject = new \stdClass();
+        $responseRows = preg_split("/\r\n|\n|\r/", $result);
+        foreach ($responseRows as $responseRow) {
+            list($key, $value) = array_map('trim', explode(":", $responseRow));
+            $resultObject->$key = $value;
+        }
+
+        return $resultObject;
     }
 
     /**
