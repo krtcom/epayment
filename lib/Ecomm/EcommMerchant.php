@@ -48,7 +48,7 @@ class EcommMerchant
      * @param string $ip client’s IP address, mandatory
      * @param string $desc description of transaction, optional
      * @param string $language authorization language identificator, optional
-     * @return string TRANSACTION_ID
+     * @return \stdClass TRANSACTION_ID
      */
 
     function startDMSAuth($amount, $currency, $ip, $desc, $language)
@@ -70,15 +70,16 @@ class EcommMerchant
      * Send parameters
      *
      * @param array post parameters
-     * @return string result
+     * @return \stdClass $resultObject
      */
     function sentPost($params)
     {
+        $resultObject = new \stdClass();
 
         if (!file_exists($this->keystore)) {
-            $result = "file " . $this->keystore . " not exists";
-            error_log($result);
-            return $result;
+            error_log($resultObject->error);
+            $resultObject->error = "file " . $this->keystore . " not exists";
+            return $resultObject;
         }
 
         $post = "";
@@ -126,7 +127,7 @@ class EcommMerchant
      * @param int $currency transaction currency code, mandatory
      * @param string $ip client’s IP address, mandatory
      * @param string $desc description of transaction, optional
-     * @return string RESULT, RESULT_CODE, RRN, APPROVAL_CODE
+     * @return \stdClass RESULT, RESULT_CODE, RRN, APPROVAL_CODE
      */
 
     function makeDMSTrans($auth_id, $amount, $currency, $ip, $desc, $language)
@@ -151,7 +152,7 @@ class EcommMerchant
      * Transaction result
      * @param int $trans_id transaction identifier, mandatory
      * @param string $ip client’s IP address, mandatory
-     * @return string RESULT, RESULT_CODE, 3DSECURE, AAV, RRN, APPROVAL_CODE
+     * @return \stdClass RESULT, RESULT_CODE, 3DSECURE, AAV, RRN, APPROVAL_CODE
      */
 
     function getTransResult($trans_id, $ip)
@@ -171,7 +172,7 @@ class EcommMerchant
      * Transaction reversal
      * @param int $trans_id transaction identifier, mandatory
      * @param int $amount transaction amount in minor units, mandatory
-     * @return string RESULT, RESULT_CODE
+     * @return \stdClass RESULT, RESULT_CODE
      */
 
     function reverse($trans_id, $amount)
@@ -189,7 +190,7 @@ class EcommMerchant
 
     /**
      * Closing of business day
-     * @return string RESULT, RESULT_CODE, FLD_075, FLD_076, FLD_087, FLD_088
+     * @return \stdClass RESULT, RESULT_CODE, FLD_075, FLD_076, FLD_087, FLD_088
      */
 
     function closeDay()
@@ -211,7 +212,7 @@ class EcommMerchant
      * @param string $ip client’s IP address, mandatory
      * @param string $desc description of transaction, optional
      * @param string $language authorization language identificator, optional
-     * @return string TRANSACTION_ID
+     * @return \stdClass TRANSACTION_ID
      */
     function startSMSTrans($amount, $currency, $ip, $desc, $language, $account)
     {
