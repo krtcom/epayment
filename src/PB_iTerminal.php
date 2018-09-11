@@ -57,7 +57,7 @@ class PB_iTerminal extends Payment
 
         $client_ip = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : null;
 
-        $responseObject = $merchant->startSMSTrans((int)($paymentObject->amount * 100), 978, $client_ip, $paymentObject->name, $paymentObject->language, $paymentObject->variableSymbol);
+        $responseObject = $merchant->startSMSTrans((int)round($paymentObject->amount * 100), 978, $client_ip, $paymentObject->name, $paymentObject->language, $paymentObject->variableSymbol);
 
         if (empty($responseObject->TRANSACTION_ID)) {
             $error = "Response error: Unknown TRANSACTION_ID.";
