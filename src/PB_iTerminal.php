@@ -53,6 +53,7 @@ class PB_iTerminal extends Payment
      */
     function request(PaymentObject $paymentObject, $endpoint = null)
     {
+        EPaymentLog::log("REQUEST Payment object:\n" . print_r($paymentObject, true));
 
         $merchant = new EcommMerchant($this->ecommServerUrl, $this->keystore, $this->keystorepassword, $this->verbose);
 
@@ -95,7 +96,7 @@ class PB_iTerminal extends Payment
             var_dump($fields, $responseObject); exit;
         }
 
-        EPaymentLog::log("POST Fields:\n" . print_r($fields, true) . "\nResponse object:\n" . print_r($responseObject, true));
+        EPaymentLog::log("RESPONSE POST Fields:\n" . print_r($fields, true) . "\nResponse object:\n" . print_r($responseObject, true));
 
         switch($responseObject->RESULT) {
             case 'OK':
