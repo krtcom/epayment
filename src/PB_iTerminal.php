@@ -5,6 +5,7 @@ namespace EPayments;
 
 use EPayment\Ecomm\EcommMerchant;
 use EPayment\EPaymentException;
+use EPayment\EPaymentLog;
 use EPayment\Interfaces\IEPaymentHttpPaymentResponse;
 
 class PB_iTerminal extends Payment
@@ -93,6 +94,8 @@ class PB_iTerminal extends Payment
         if (defined("EPAYMENT_DEBUG") && EPAYMENT_DEBUG) {
             var_dump($fields, $responseObject); exit;
         }
+
+        EPaymentLog::log("POST Fields:\n" . print_r($fields, true) . "\nResponse object:\n" . print_r($responseObject, true));
 
         switch($responseObject->RESULT) {
             case 'OK':
