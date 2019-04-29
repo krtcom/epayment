@@ -89,6 +89,8 @@ class PB_iTerminal extends Payment
 
         $trans_id = $fields['trans_id'];
 
+        $this->transactionId = $trans_id;
+
         $client_ip = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : null;
 
         $merchant = new EcommMerchant($this->ecommServerUrl, $this->keystore, $this->keystorepassword, $this->verbose);
