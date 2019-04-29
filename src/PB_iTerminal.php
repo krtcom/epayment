@@ -69,6 +69,8 @@ class PB_iTerminal extends Payment
             throw new EPaymentException($error);
         }
 
+        $this->transactionId = $responseObject->TRANSACTION_ID;
+
         $trans_id = urlencode($responseObject->TRANSACTION_ID);
         return $this->ecommClientUrl . "?trans_id=$trans_id";
     }

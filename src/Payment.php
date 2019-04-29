@@ -8,6 +8,8 @@ use EPayment\EPaymentException;
 abstract class Payment
 {
 
+    public $transactionId;
+
     /**
      * Payment constructor.
      * @throws EPaymentException
