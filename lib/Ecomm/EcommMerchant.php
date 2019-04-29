@@ -114,7 +114,9 @@ class EcommMerchant
         $responseRows = preg_split("/\r\n|\n|\r/", $result);
         foreach ($responseRows as $responseRow) {
             list($key, $value) = array_map('trim', explode(":", $responseRow));
-            $resultObject->$key = $value;
+            if (!empty($key)) {
+                $resultObject->$key = $value;
+            }
         }
 
         return $resultObject;
