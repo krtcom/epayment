@@ -9,6 +9,7 @@ abstract class Payment
 {
 
     public $transactionId;
+    public $amount;
 
     /**
      * Payment constructor.

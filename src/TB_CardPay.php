@@ -87,6 +87,9 @@ class TB_CardPay extends Payment
 
         $response->verifySignature(EPAYMENT_TB_CARDPAY_SECRET);
 
+        $this->transactionId = $response->VS;
+        $this->amount = $response->AMT;
+
         return $response->getPaymentResponse();
 
     }
