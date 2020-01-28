@@ -93,4 +93,22 @@ class TB_CardPay extends Payment
         return $response->getPaymentResponse();
 
     }
+
+    /**
+     * @param null $fields
+     * @return PaymentResponseObject
+     * @throws EPaymentException
+     */
+    function responseObject($fields = null)
+    {
+
+        $response = new CardPayPaymentHttpResponse($fields);
+
+        $response->validate();
+
+        $response->verifySignature(EPAYMENT_TB_CARDPAY_SECRET);
+
+        return new PaymentResponseObject($response->AMT, $response->VS, $response->TID, $response->getPaymentResponse());
+
+    }
 }

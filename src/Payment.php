@@ -32,4 +32,11 @@ abstract class Payment
      */
     abstract function response($fields = null);
 
+    /**
+     * @param null $fields
+     * @return PaymentResponseObject
+     */
+    function responseObject($fields = null) {
+        return new PaymentResponseObject();
+    }
 }
