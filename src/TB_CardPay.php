@@ -4,6 +4,7 @@ namespace EPayments;
 
 
 use EPayment\EPaymentException;
+use EPayment\EPaymentLog;
 use EPayment\TB_CardPay_v4_HMAC\CardPayPaymentHttpResponse;
 use EPayment\TB_CardPay_v4_HMAC\CardPayPaymentRequest;
 use Transliterator;
@@ -83,6 +84,8 @@ class TB_CardPay extends Payment
 
         $response = new CardPayPaymentHttpResponse($fields);
 
+        EPaymentLog::log("RESPONSE POST Fields:\n" . print_r($fields, true));
+
         $response->validate();
 
         $response->verifySignature(EPAYMENT_TB_CARDPAY_SECRET);
@@ -104,11 +107,17 @@ class TB_CardPay extends Payment
 
         $response = new CardPayPaymentHttpResponse($fields);
 
+        EPaymentLog::log("RESPONSE POST Fields:\n" . print_r($fields, true));
+
         $response->validate();
 
         $response->verifySignature(EPAYMENT_TB_CARDPAY_SECRET);
 
-        return new PaymentResponseObject($response->AMT, $response->VS, $response->TID, $response->getPaymentResponse());
+        $PaymentResponseObject = new PaymentResponseObject($response->AMT, $response->VS, $response->TID, $response->getPaymentResponse());
+
+        EPaymentLog::log("RESPONSE Object:\n" . print_r($PaymentResponseObject, true));
+
+        return $PaymentResponseObject;
 
     }
 }
