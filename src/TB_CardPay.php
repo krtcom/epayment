@@ -90,8 +90,7 @@ class TB_CardPay extends Payment
 
         $response->verifySignature(EPAYMENT_TB_CARDPAY_SECRET);
 
-        $this->transactionId = $response->VS;
-        $this->amount = $response->AMT;
+        $this->transactionId = $response->TID;
 
         return $response->getPaymentResponse();
 
@@ -115,7 +114,7 @@ class TB_CardPay extends Payment
 
         $PaymentResponseObject = new PaymentResponseObject($response->AMT, $response->VS, $response->TID, $response->getPaymentResponse());
 
-        EPaymentLog::log("RESPONSE Object:\n" . print_r($PaymentResponseObject, true));
+        $this->transactionId = $response->TID;
 
         return $PaymentResponseObject;
 
