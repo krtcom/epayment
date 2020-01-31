@@ -71,6 +71,8 @@ class TB_CardPay extends Payment
 
         $request->signMessage(EPAYMENT_TB_CARDPAY_SECRET);
 
+        EPaymentLog::log("TB_CardPay REQUEST:\n" . json_encode($request));
+
         return $request->getRedirectUrl();
     }
 
@@ -84,7 +86,7 @@ class TB_CardPay extends Payment
 
         $response = new CardPayPaymentHttpResponse($fields);
 
-        EPaymentLog::log("TB_CardPay RESPONSE:\n" . print_r($response, true));
+        EPaymentLog::log("TB_CardPay RESPONSE:\n" . json_encode($response));
 
         $response->validate();
 
@@ -106,7 +108,7 @@ class TB_CardPay extends Payment
 
         $response = new CardPayPaymentHttpResponse($fields);
 
-        EPaymentLog::log("TB_CardPay RESPONSE:\n" . print_r($response, true));
+        EPaymentLog::log("TB_CardPay RESPONSE:\n" . json_encode($response));
 
         $response->validate();
 
