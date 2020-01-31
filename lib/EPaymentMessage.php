@@ -2,7 +2,7 @@
 
 namespace EPayment;
 
-abstract class EPaymentMessage
+abstract class EPaymentMessage implements \JsonSerializable
 {
     protected $fields         = array();
     protected $readOnlyFields = array();
@@ -73,4 +73,8 @@ abstract class EPaymentMessage
     protected abstract function validateData();
 
     protected abstract function getSignatureBase();
+
+    public function jsonSerialize() {
+        return $this->fields;
+    }
 }
