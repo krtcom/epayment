@@ -84,7 +84,7 @@ class TB_CardPay extends Payment
 
         $response = new CardPayPaymentHttpResponse($fields);
 
-        EPaymentLog::log("RESPONSE POST Fields:\n" . print_r($fields, true));
+        EPaymentLog::log("TB_CardPay RESPONSE:\n" . print_r($response, true));
 
         $response->validate();
 
@@ -106,7 +106,7 @@ class TB_CardPay extends Payment
 
         $response = new CardPayPaymentHttpResponse($fields);
 
-        EPaymentLog::log("RESPONSE POST Fields:\n" . print_r($fields, true));
+        EPaymentLog::log("TB_CardPay RESPONSE:\n" . print_r($response, true));
 
         $response->validate();
 
