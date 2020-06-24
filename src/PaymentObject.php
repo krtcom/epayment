@@ -13,8 +13,9 @@ class PaymentObject
     public $email;
     public $notificationUrl;
     public $userId;
+    public $orderID;
 
-    public function __construct($amount, $variableSymbol, $returnUrl = null, $name = null, $email = null, $language = null)
+    public function __construct($amount, $variableSymbol, $returnUrl = null, $name = null, $email = null, $language = null, $orderID = null)
     {
         $this->amount = $amount;
         $this->variableSymbol = $variableSymbol;
@@ -22,6 +23,7 @@ class PaymentObject
         $this->name = $name;
         $this->email = $email;
         $this->language = $language;
+        $this->orderID = $orderID;
     }
 
 }
