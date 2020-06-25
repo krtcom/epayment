@@ -51,6 +51,10 @@ class GP_webpay extends Payment
         $request->REFERENCENUMBER = sprintf("%010d", $paymentObject->variableSymbol);
         $request->MD = $paymentObject->amount;    // vlastny parameter (suma)
 
+        if (in_array($paymentObject->language, self::VALID_LANGUAGES)) {
+            $request->LANG = $paymentObject->language;
+        }
+
         $request->validate();
 
         $request->signMessage(null);
@@ -60,14 +64,14 @@ class GP_webpay extends Payment
 
     function response($fields = null)
     {
-        $pres = new GPwebpayPaymentResponse($fields);
-        $pres->setPublicKeyFile(EPAYMENT_GP_WEBPAY_PUBLIC_KEY_FILE);
+        $response = new GPwebpayPaymentResponse($fields);
+        $response->setPublicKeyFile(EPAYMENT_GP_WEBPAY_PUBLIC_KEY_FILE);
 
-        $pres->validate();
+        $response->validate();
 
-        $pres->verifySignature(EPAYMENT_GP_WEBPAY_MID);
+        $response->verifySignature(EPAYMENT_GP_WEBPAY_MID);
 
-        return $pres->getPaymentResponse();
+        return $response->getPaymentResponse();
     }
 
     /**
@@ -82,10 +86,9 @@ class GP_webpay extends Payment
         $response->validate();
 
         $response->verifySignature(EPAYMENT_GP_WEBPAY_MID);
-        $PaymentResponseObject = new PaymentResponseObject($response->MD, $response->MERORDERNUM, $response->ORDERNUMBER, $response->getPaymentResponse());
 
-        $this->transactionId = $response->TID;
+        $this->transactionId = $response->ORDERNUMBER;
 
-        return $PaymentResponseObject;
+        return new PaymentResponseObject($response->MD, $response->MERORDERNUM, $response->ORDERNUMBER, $response->getPaymentResponse());
     }
 }
