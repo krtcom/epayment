@@ -42,13 +42,12 @@ class GP_webpay extends Payment
 
         $request->MERCHANTNUMBER = EPAYMENT_GP_WEBPAY_MID;  // cislo obchodu
         $request->OPERATION = "CREATE_ORDER";
-        $request->ORDERNUMBER = $paymentObject->orderID . substr(microtime(), 2, 6);       // cislo platby
+        $request->ORDERNUMBER = $paymentObject->orderID . substr(microtime(), 2, 6);       // cislo platby musi byt unikatne pre kazdu poziadavku
         $request->AMOUNT = (int)($paymentObject->amount * 100);    // suma (v eurocentoch)
         $request->CURRENCY = 978;                            // ISO 4217 kod pre menu EUR
         $request->DEPOSITFLAG = 1;                           // okamzita uhrada
         $request->MERORDERNUM = $paymentObject->variableSymbol; // variabilny symbol
         $request->URL = $paymentObject->returnUrl;    // návratová URL, na ktorú bude zaslaný payment response
-        $request->REFERENCENUMBER = sprintf("%010d", $paymentObject->variableSymbol);
         $request->MD = $paymentObject->amount;    // vlastny parameter (suma)
 
         if (in_array($paymentObject->language, self::VALID_LANGUAGES)) {
