@@ -21,6 +21,11 @@ $po->userId = 47;
 $po->returnUrl = 'http://epayment.devel.webcreators.sk/examples/GP_webpay/response.php';
 $po->orderID = 333;
 
+$lang = 'sk';
+if (in_array(strtolower($lang), GP_webpay::VALID_LANGUAGES)) {
+    $po->language = strtolower($lang);
+}
+
 try {
     $redirectURL = $payment->request($po, 'https://test.3dsecure.gpwebpay.com/pgw/order.do');
     ?>

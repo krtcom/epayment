@@ -8,6 +8,8 @@ use EPayment\GP_webpay\GPwebpayPaymentResponse;
 class GP_webpay extends Payment
 {
 
+    const VALID_LANGUAGES = ['ar', 'de_AT', 'bg', 'hr', 'cs', 'da', 'nl', 'en', 'fi', 'fr', 'de', 'el', 'hu', 'it', 'ja', 'lv', 'no', 'pl', 'pt', 'ro', 'ru', 'sk', 'es', 'sl', 'sv', 'uk', 'vi'];
+
     public function __construct()
     {
         if (!defined('EPAYMENT_GP_WEBPAY_MID')) {
