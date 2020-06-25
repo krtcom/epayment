@@ -48,7 +48,9 @@ class GPwebpayPaymentRequest extends EPaymentMessage implements IEPaymentHttpRed
     }
 
     protected function getSignatureBase() {
-        return implode("|", array_filter($this->fields));
+        $signFields = array_filter($this->fields);
+        unset($signFields["LANG"]);
+        return implode("|", $signFields);
     }
 
     /**

@@ -6,33 +6,53 @@ use EPayment\EPaymentException;
 use EPayment\EPaymentMessage;
 use EPayment\Interfaces\IEPaymentHttpPaymentResponse;
 
-class GPwebpayPaymentResponse extends EPaymentMessage implements IEPaymentHttpPaymentResponse {
+class GPwebpayPaymentResponse extends EPaymentMessage implements IEPaymentHttpPaymentResponse
+{
 
     protected $isVerified = false;
     protected $publicKeyFile;
 
-    public function __construct($fields = null) {
+    public function __construct($fields = null)
+    {
 
-        $this->readOnlyFields = array('OPERATION', 'ORDERNUMBER', 'MERORDERNUM', 'MD', 'PRCODE', 'SRCODE', 'RESULTTEXT', 'USERPARAM1', 'ADDINFO', 'DIGEST', 'DIGEST1');
+        $this->readOnlyFields = array(
+            'OPERATION',
+            'ORDERNUMBER',
+            'MERORDERNUM',
+            'MD',
+            'PRCODE',
+            'SRCODE',
+            'RESULTTEXT',
+            'USERPARAM1',
+            'ADDINFO',
+            'TOKEN',
+            'EXPIRY',
+            'ACSRES',
+            'ACCODE',
+            'PANPATTERN',
+            'DAYTOCAPTURE',
+            'TOKENREGSTATUS',
+            'ACRC',
+            'RRN',
+            'PAR',
+            'TRACEID',
+            'DIGEST',
+            'DIGEST1'
+        );
 
         if ($fields == null) {
             $fields = $_GET;
         }
 
-        $this->fields['OPERATION'] = isset($fields['OPERATION']) ? $fields['OPERATION'] : null;
-        $this->fields['ORDERNUMBER'] = isset($fields['ORDERNUMBER']) ? $fields['ORDERNUMBER'] : null;
-        $this->fields['MERORDERNUM'] = isset($fields['MERORDERNUM']) ? $fields['MERORDERNUM'] : null;
-        $this->fields['MD'] = isset($fields['MD']) ? $fields['MD'] : null;
-        $this->fields['PRCODE'] = isset($fields['PRCODE']) ? $fields['PRCODE'] : null;
-        $this->fields['SRCODE'] = isset($fields['SRCODE']) ? $fields['SRCODE'] : null;
-        $this->fields['RESULTTEXT'] = isset($fields['RESULTTEXT']) ? $fields['RESULTTEXT'] : null;
-        $this->fields['USERPARAM1'] = isset($fields['USERPARAM1']) ? $fields['USERPARAM1'] : null;
-        $this->fields['ADDINFO'] = isset($fields['ADDINFO']) ? $fields['ADDINFO'] : null;
-        $this->fields['DIGEST'] = isset($fields['DIGEST']) ? $fields['DIGEST'] : null;
-        $this->fields['DIGEST1'] = isset($fields['DIGEST1']) ? $fields['DIGEST1'] : null;
+        foreach ($this->readOnlyFields as $key) {
+            if (isset($fields[$key])) {
+                $this->fields[$key] = $fields[$key];
+            }
+        }
     }
 
-    public function verifySignature($merchantNumber = null) {
+    public function verifySignature($merchantNumber = null)
+    {
         if ($this->verifySignKey($merchantNumber)) {
             $this->isVerified = true;
             return true;
@@ -45,7 +65,8 @@ class GPwebpayPaymentResponse extends EPaymentMessage implements IEPaymentHttpPa
      * @return bool
      * @throws EPaymentException
      */
-    private function verifySignKey($merchantNumber) {
+    private function verifySignKey($merchantNumber)
+    {
         if (!$this->isValid) {
             throw new EPaymentException(__METHOD__ . ": Message was not validated.");
         }
@@ -64,7 +85,8 @@ class GPwebpayPaymentResponse extends EPaymentMessage implements IEPaymentHttpPa
 
     }
 
-    protected function getSignatureBase() {
+    protected function getSignatureBase()
+    {
         $signFields = array_filter($this->fields, function ($item) {
             return $item != null;
         });
@@ -73,7 +95,8 @@ class GPwebpayPaymentResponse extends EPaymentMessage implements IEPaymentHttpPa
         return implode("|", $signFields);
     }
 
-    protected function getSignatureBase1($merchantNumber) {
+    protected function getSignatureBase1($merchantNumber)
+    {
         $signFields = array_filter($this->fields, function ($item) {
             return $item != null;
         });
@@ -83,7 +106,8 @@ class GPwebpayPaymentResponse extends EPaymentMessage implements IEPaymentHttpPa
         return implode("|", $signFields);
     }
 
-    public function getPaymentResponse() {
+    public function getPaymentResponse()
+    {
         if (!$this->isVerified) {
             throw new EPaymentException(__METHOD__ . ": Message was not verified yet.");
         }
@@ -95,7 +119,8 @@ class GPwebpayPaymentResponse extends EPaymentMessage implements IEPaymentHttpPa
         return IEPaymentHttpPaymentResponse::RESPONSE_FAIL;
     }
 
-    public function computeSign($sharedSecret) {
+    public function computeSign($sharedSecret)
+    {
     }
 
     public function getPublicKeyFile()
@@ -108,7 +133,8 @@ class GPwebpayPaymentResponse extends EPaymentMessage implements IEPaymentHttpPa
         $this->publicKeyFile = $publicKeyFile;
     }
 
-    protected function validateData() {
+    protected function validateData()
+    {
         return true;
     }
 }

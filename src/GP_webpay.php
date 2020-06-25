@@ -42,11 +42,12 @@ class GP_webpay extends Payment
         $request->OPERATION = "CREATE_ORDER";
         $request->ORDERNUMBER = $paymentObject->orderID . substr(microtime(), 2, 6);       // cislo platby
         $request->AMOUNT = (int)($paymentObject->amount * 100);    // suma (v eurocentoch)
-        $request->CURRENCY = 978;                            // ISO 4217 kode pre menu EUR
+        $request->CURRENCY = 978;                            // ISO 4217 kod pre menu EUR
         $request->DEPOSITFLAG = 1;                           // okamzita uhrada
-        $request->MERORDERNUM = $paymentObject->orderID;     // cislo objednavky
+        $request->MERORDERNUM = $paymentObject->variableSymbol; // variabilny symbol
         $request->URL = $paymentObject->returnUrl;    // návratová URL, na ktorú bude zaslaný payment response
         $request->REFERENCENUMBER = sprintf("%010d", $paymentObject->variableSymbol);
+        $request->MD = $paymentObject->amount;    // vlastny parameter (suma)
 
         $request->validate();
 
@@ -65,5 +66,24 @@ class GP_webpay extends Payment
         $pres->verifySignature(EPAYMENT_GP_WEBPAY_MID);
 
         return $pres->getPaymentResponse();
+    }
+
+    /**
+     * @param null $fields
+     * @return PaymentResponseObject
+     * @throws EPaymentException
+     */
+    function responseObject($fields = null) {
+        $response = new GPwebpayPaymentResponse($fields);
+        $response->setPublicKeyFile(EPAYMENT_GP_WEBPAY_PUBLIC_KEY_FILE);
+
+        $response->validate();
+
+        $response->verifySignature(EPAYMENT_GP_WEBPAY_MID);
+        $PaymentResponseObject = new PaymentResponseObject($response->MD, $response->MERORDERNUM, $response->ORDERNUMBER, $response->getPaymentResponse());
+
+        $this->transactionId = $response->TID;
+
+        return $PaymentResponseObject;
     }
 }
