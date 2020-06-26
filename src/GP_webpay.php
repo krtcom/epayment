@@ -8,7 +8,8 @@ use EPayment\GP_webpay\GPwebpayPaymentResponse;
 class GP_webpay extends Payment
 {
 
-    const VALID_LANGUAGES = ['ar', 'de_AT', 'bg', 'hr', 'cs', 'da', 'nl', 'en', 'fi', 'fr', 'de', 'el', 'hu', 'it', 'ja', 'lv', 'no', 'pl', 'pt', 'ro', 'ru', 'sk', 'es', 'sl', 'sv', 'uk', 'vi'];
+    public static $VALID_LANGUAGES = ['ar', 'de_AT', 'bg', 'hr', 'cs', 'da', 'nl', 'en', 'fi', 'fr', 'de', 'el', 'hu', 'it', 'ja', 'lv', 'no', 'pl', 'pt', 'ro', 'ru', 'sk', 'es', 'sl', 'sv', 'uk', 'vi'];
+    public static $VALID_CURRENCIES = [978];
 
     public function __construct()
     {
@@ -46,7 +47,7 @@ class GP_webpay extends Payment
         $request->AMOUNT = (int)($paymentObject->amount * 100);    // suma (v eurocentoch)
 
         // ISO 4217 kod pre menu
-        if (defined('EPAYMENT_GP_WEBPAY_VALID_CURRENCIES') && is_array(EPAYMENT_GP_WEBPAY_VALID_CURRENCIES) && in_array($paymentObject->currency, EPAYMENT_GP_WEBPAY_VALID_CURRENCIES)) {
+        if (is_array(self::$VALID_CURRENCIES) && in_array($paymentObject->currency, self::$VALID_CURRENCIES)) {
             $request->CURRENCY = $paymentObject->currency;
         } else {
             $request->CURRENCY = 978; //EUR
@@ -58,12 +59,10 @@ class GP_webpay extends Payment
         $request->MD = $paymentObject->amount;    // vlastny parameter (suma)
 
         //jazyk aplikacie
-        $validLanguages = self::VALID_LANGUAGES;
-        if (defined('EPAYMENT_GP_WEBPAY_VALID_LANGUAGES') && is_array(EPAYMENT_GP_WEBPAY_VALID_LANGUAGES)) {
-            $validLanguages = EPAYMENT_GP_WEBPAY_VALID_LANGUAGES;
-        }
-        if (in_array($paymentObject->language, $validLanguages)) {
+        if (is_array(self::$VALID_LANGUAGES) && in_array($paymentObject->language, self::$VALID_LANGUAGES)) {
             $request->LANG = $paymentObject->language;
+        } else {
+            $request->LANG = 'sk';
         }
 
         $request->validate();
