@@ -14,6 +14,7 @@ class PaymentObject
     public $notificationUrl;
     public $userId;
     public $orderID;
+    public $currency;
 
     public function __construct($amount, $variableSymbol, $returnUrl = null, $name = null, $email = null, $language = null, $orderID = null)
     {

@@ -44,13 +44,25 @@ class GP_webpay extends Payment
         $request->OPERATION = "CREATE_ORDER";
         $request->ORDERNUMBER = $paymentObject->orderID . substr(microtime(), 2, 6);       // cislo platby musi byt unikatne pre kazdu poziadavku
         $request->AMOUNT = (int)($paymentObject->amount * 100);    // suma (v eurocentoch)
-        $request->CURRENCY = 978;                            // ISO 4217 kod pre menu EUR
+
+        // ISO 4217 kod pre menu
+        if (defined('EPAYMENT_GP_WEBPAY_VALID_CURRENCIES') && is_array(EPAYMENT_GP_WEBPAY_VALID_CURRENCIES) && in_array($paymentObject->currency, EPAYMENT_GP_WEBPAY_VALID_CURRENCIES)) {
+            $request->CURRENCY = $paymentObject->currency;
+        } else {
+            $request->CURRENCY = 978; //EUR
+        }
+
         $request->DEPOSITFLAG = 1;                           // okamzita uhrada
         $request->MERORDERNUM = $paymentObject->variableSymbol; // variabilny symbol
         $request->URL = $paymentObject->returnUrl;    // návratová URL, na ktorú bude zaslaný payment response
         $request->MD = $paymentObject->amount;    // vlastny parameter (suma)
 
-        if (in_array($paymentObject->language, self::VALID_LANGUAGES)) {
+        //jazyk aplikacie
+        $validLanguages = self::VALID_LANGUAGES;
+        if (defined('EPAYMENT_GP_WEBPAY_VALID_LANGUAGES') && is_array(EPAYMENT_GP_WEBPAY_VALID_LANGUAGES)) {
+            $validLanguages = EPAYMENT_GP_WEBPAY_VALID_LANGUAGES;
+        }
+        if (in_array($paymentObject->language, $validLanguages)) {
             $request->LANG = $paymentObject->language;
         }
 
