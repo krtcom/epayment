@@ -57,6 +57,7 @@ class GP_webpay extends Payment
         $request->MERORDERNUM = $paymentObject->variableSymbol; // variabilny symbol
         $request->URL = $paymentObject->returnUrl;    // návratová URL, na ktorú bude zaslaný payment response
         $request->MD = $paymentObject->amount;    // vlastny parameter (suma)
+        $request->REFERENCENUMBER = $paymentObject->variableSymbol; // variabilny symbol
 
         //jazyk aplikacie
         if (is_array(self::$VALID_LANGUAGES) && in_array($paymentObject->language, self::$VALID_LANGUAGES)) {
