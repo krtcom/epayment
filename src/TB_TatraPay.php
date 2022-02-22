@@ -40,18 +40,11 @@ class TB_TatraPay extends Payment
             $request->setRedirectUrlBase($endpoint);
         }
 
-        $REMOTE_ADDR = '1.2.3.4';
-
-        if (isset($_SERVER["REMOTE_ADDR"])) {
-            $REMOTE_ADDR = $_SERVER["REMOTE_ADDR"];
-        }
-        
         $request->MID = EPAYMENT_TB_TATRAPAY_MID;
         $request->AMT = sprintf("%01.2f", $paymentObject->amount);
         $request->CURR = "978";
-        $request->VS = $paymentObject->variableSymbol;
+        $request->REF = $paymentObject->variableSymbol;
         $request->RURL = $paymentObject->returnUrl;
-        $request->IPC = $REMOTE_ADDR;
 
         $transliterator = Transliterator::create("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC;");
         $name = trim($transliterator->transliterate($paymentObject->name));
@@ -59,7 +52,6 @@ class TB_TatraPay extends Payment
             $name = mb_substr($name, 0, 30);
         }
 
-        $request->NAME = $name;
         $request->TIMESTAMP = gmdate("dmYHis");
 
         if (in_array($paymentObject->language, TatraPayPaymentRequest::VALID_LANGUAGES)) {
