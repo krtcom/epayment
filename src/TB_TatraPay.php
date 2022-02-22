@@ -4,6 +4,7 @@ namespace EPayments;
 
 
 use EPayment\EPaymentException;
+use EPayment\EPaymentLog;
 use EPayment\TB_TatraPay_v4_HMAC\TatraPayPaymentHttpResponse;
 use EPayment\TB_TatraPay_v4_HMAC\TatraPayPaymentRequest;
 use Transliterator;
@@ -61,6 +62,8 @@ class TB_TatraPay extends Payment
         $request->validate();
 
         $request->signMessage(EPAYMENT_TB_TATRAPAY_SECRET);
+
+        EPaymentLog::log("TB_TatraPay REQUEST:\n" . json_encode($request));
 
         return $request->getRedirectUrl();
     }
