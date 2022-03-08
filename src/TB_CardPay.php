@@ -53,6 +53,7 @@ class TB_CardPay extends Payment
         $request->VS = $paymentObject->variableSymbol;
         $request->RURL = $paymentObject->returnUrl;
         $request->IPC = $REMOTE_ADDR;
+        $request->AREDIR = 1;
 
         $transliterator = Transliterator::create("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC;");
         $name = trim($transliterator->transliterate($paymentObject->name));

@@ -46,6 +46,7 @@ class TB_TatraPay extends Payment
         $request->CURR = "978";
         $request->REF = $paymentObject->variableSymbol;
         $request->RURL = $paymentObject->returnUrl;
+        $request->AREDIR = 1;
 
         $transliterator = Transliterator::create("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC;");
         $name = trim($transliterator->transliterate($paymentObject->name));
