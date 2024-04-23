@@ -57,7 +57,7 @@ abstract class EPaymentMessage implements \JsonSerializable
 
         foreach ($this->requiredFields as $requiredField) {
             if (!isset($this->fields[$requiredField])) {
-                throw new EPaymentException("Required field " . $requiredField . " is missing.");
+                throw new EPaymentException("Required field '" . $requiredField . "' is missing.");
             }
         }
 

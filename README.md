@@ -7,5 +7,6 @@ Online payments for selected banks in Slovakia implemented in PHP
 * Tatra Banka - TatraPay
 * Uni Credit Bank - UniPlatba
 * VUB - EPlatba
+* VUB - eCard
 ****
 -----------------------
