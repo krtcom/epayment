@@ -30,7 +30,6 @@ class VUB_eCard extends Payment
     /**
      * @param PaymentObject $paymentObject
      * @param null $endpoint
-     * @param null $endpoint
      * @return array
      * @throws EPaymentException
      */
@@ -56,6 +55,8 @@ class VUB_eCard extends Payment
         if (isset($paymentObject->language) && in_array($paymentObject->language, VUBeCardPaymentRequest::VALID_LANGUAGES)) {
             $request->lang = $paymentObject->language;
         }
+
+        $request->setOptionalFields($paymentObject);
 
         $request->validate();
 

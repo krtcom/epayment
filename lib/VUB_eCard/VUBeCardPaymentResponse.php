@@ -3,7 +3,6 @@
 namespace EPayment\VUB_eCard;
 
 use EPayment\EPaymentException;
-use EPayment\EPaymentSHA512SignedMessage;
 use EPayment\Interfaces\IEPaymentHttpPaymentResponse;
 
 /**

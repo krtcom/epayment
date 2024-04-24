@@ -3,8 +3,8 @@
 namespace EPayment\VUB_eCard;
 
 use EPayment\EPaymentException;
-use EPayment\EPaymentSHA512SignedMessage;
 use EPayment\Interfaces\IEPaymentHttpPostPaymentRequest;
+use EPayments\PaymentObject;
 use Exception;
 
 /**
@@ -37,7 +37,7 @@ class VUBeCardPaymentRequest extends VUB_eCardSignedMessage implements IEPayment
 
     private $urlBase = self::URL_BASE;
 
-    protected $requiredFields = [ 'clientid', 'storetype', 'trantype', 'amount', 'currency', 'oid', 'okUrl', 'failUrl', 'lang', 'rnd', 'hashAlgorithm', 'encoding'];
+    protected $requiredFields = ['clientid', 'storetype', 'trantype', 'amount', 'currency', 'oid', 'okUrl', 'failUrl', 'lang', 'rnd', 'hashAlgorithm', 'encoding'];
     protected $optionalFields = [
         'description', 'comments', 'INVOICENUMBER', 'tel', 'email',
         'BillToCompany', 'BillToName', 'BillToStreet1', 'BillToStreet2', 'BillToCity', 'BillToState', 'BillToPostalCode', 'BillToCountry',
@@ -162,6 +162,15 @@ class VUBeCardPaymentRequest extends VUB_eCardSignedMessage implements IEPayment
     public function setUrlBase($url)
     {
         $this->urlBase = $url;
+    }
+
+    public function setOptionalFields(PaymentObject $paymentObject)
+    {
+        foreach ($this->optionalFields as $field) {
+            if (!empty($paymentObject->$field)) {
+                $this->$field = $paymentObject->$field;
+            }
+        }
     }
 
     protected function getSignatureBase()

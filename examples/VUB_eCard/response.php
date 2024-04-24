@@ -13,22 +13,22 @@ $payment = new VUB_eCard();
 try {
     $notificationResult = $payment->response();
 
-    switch($notificationResult) {
+    switch ($notificationResult) {
         case IEPaymentHttpPaymentResponse::RESPONSE_SUCCESS:
             $result = "Payment success";
             break;
         case IEPaymentHttpPaymentResponse::RESPONSE_FAIL:
-            $result =  sprintf("Payment failed [%s]", $payment->responseMessage);
+            $result = sprintf("Payment failed [%s]", $payment->responseMessage);
             break;
         case IEPaymentHttpPaymentResponse::RESPONSE_TIMEOUT:
-            $result =  "Payment timeout";
+            $result = "Payment timeout";
             break;
         case IEPaymentHttpPaymentResponse::RESPONSE_PENDING:
-            $result =  "Payment pending";
+            $result = "Payment pending";
             break;
     }
 } catch (EPaymentException $e) {
-    $result = "ERROR: ". $e->getMessage();
+    $result = "ERROR: " . $e->getMessage();
 }
 
 echo $result;

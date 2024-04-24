@@ -23,11 +23,11 @@ try {
     ?>
     <form action="<?= $request["action"]; ?>" method="post">
         <?php foreach ($request["fields"] as $name => $value) { ?>
-            <input type="hidden" name="<?= $name; ?>" value="<?= $value; ?>" />
+            <input type="hidden" name="<?= $name; ?>" value="<?= $value; ?>"/>
         <?php } ?>
         <button type="submit">Odoslať</button>
     </form>
     <?php
 } catch (EPaymentException $e) {
-    echo "Error: ". $e->getMessage();
+    echo "Error: " . $e->getMessage();
 }
