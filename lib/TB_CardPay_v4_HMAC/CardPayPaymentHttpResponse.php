@@ -71,6 +71,14 @@ RDoX4sTMmmdiIrpmCZD4CLDtP0j2LfD7saSIc8kZUwfILg==
 
         $keyData = file_get_contents(self::ECDSA_KEY_LIST_URL);
 
+        if (empty($keyData) && defined('ECDSA_KEY_LIST_FILE') && file_exists(ECDSA_KEY_LIST_FILE)) {
+            $keyData = file_get_contents(ECDSA_KEY_LIST_FILE);
+        }
+
+        if (empty($keyData)) {
+            throw new Exception('Cannot access ECDSA key list');
+        }
+
         $regex = "/KEY_ID: $ID\RSTATUS: VALID\R(-----BEGIN PUBLIC KEY-----.+-----END PUBLIC KEY-----)/sU";
         if (preg_match($regex, $keyData, $match)) {
             return $match[1];
