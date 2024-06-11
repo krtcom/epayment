@@ -61,6 +61,10 @@ class TatraPayPaymentHttpResponse extends EPaymentHmacSignedMessage implements I
     private function get_ECDSA_KEY($ID)
     {
 
+        if (defined('EPAYMENT_DEBUG_ECDSA_PUBLIC')) {
+            return EPAYMENT_DEBUG_ECDSA_PUBLIC;
+        }
+
         if (defined('EPAYMENT_DEBUG') && EPAYMENT_DEBUG) {
             return "-----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEozvFM1FJP4igUQ6kP8ofnY7ydIWksMDk1IKXyr/T
