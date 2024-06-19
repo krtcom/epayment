@@ -12,6 +12,9 @@ namespace EPayments;
  * @property string $BillToState;
  * @property string $BillToPostalCode;
  * @property string $BillToCountry;
+ * @property string $BillToCountryISO;
+ * @property string $BillToPhone
+ * @property string $BillToEmail
  *
  * @property string $ShipToCompany;
  * @property string $ShipToName;
@@ -21,6 +24,10 @@ namespace EPayments;
  * @property string $ShipToStateProv;
  * @property string $ShipToPostalCode;
  * @property string $ShipToCountry;
+ * @property string $ShipToCountryISO;
+ * @property string ShipToPhone;
+ * @property string ShipToEmail;
+ * @property string $ShipToMethod;
  */
 class PaymentObject
 {

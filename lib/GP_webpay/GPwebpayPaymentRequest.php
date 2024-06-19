@@ -2,12 +2,13 @@
 
 namespace EPayment\GP_webpay;
 
+use DOMDocument;
 use EPayment\EPaymentException;
 use EPayment\EPaymentMessage;
 use EPayment\Interfaces\IEPaymentHttpRedirectPaymentRequest;
 
 class GPwebpayPaymentRequest extends EPaymentMessage implements IEPaymentHttpRedirectPaymentRequest {
-    
+
     const GPwebpay_EPayment_URL_Base = "https://3dsecure.gpwebpay.com/pgw/order.do";
 
     protected $redirectUrlBase = self::GPwebpay_EPayment_URL_Base;
@@ -44,6 +45,14 @@ class GPwebpayPaymentRequest extends EPaymentMessage implements IEPaymentHttpRed
     }
 
     protected function validateData() {
+
+        $doc = new DOMDocument();
+        $doc->loadXML($this->ADDINFO);
+
+        if (!$doc->schemaValidate(__DIR__ . '/GPwebpayAdditionalInfoRequest-v5.0.xsd')) {
+            throw new EPaymentException("Invalid AdditionalInfoRequest");
+        }
+
         return true;
     }
 

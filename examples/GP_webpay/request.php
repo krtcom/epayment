@@ -21,8 +21,24 @@ $po->userId = 47;
 $po->returnUrl = 'http://epayment.devel.webcreators.sk/examples/GP_webpay/response.php';
 $po->orderID = 333;
 
+$po->BillToName = "Jožko Mrkvička";
+$po->BillToStreet1 = "Testovacia 123";
+$po->BillToCity = "Test";
+$po->BillToPostalCode = "12345";
+$po->BillToCountryISO = 703;
+$po->BillToPhone = "0910123456";
+$po->BillToEmail = "test@epayment.com";
+
+$po->ShipToName = "Jožko Mrkvička";
+$po->ShipToStreet1 = "Dodaci ulice 123";
+$po->ShipToCity = "Dodaci Město";
+$po->ShipToPostalCode = "99999";
+$po->ShipToCountryISO = 203;
+$po->ShipToPhone = "0911111111";
+$po->ShipToEmail = "test@epayment.com";
+
 $lang = 'sk';
-if (in_array(strtolower($lang), GP_webpay::VALID_LANGUAGES)) {
+if (in_array(strtolower($lang), GP_webpay::$VALID_LANGUAGES)) {
     $po->language = strtolower($lang);
 }
 
