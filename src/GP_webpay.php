@@ -33,7 +33,7 @@ class GP_webpay extends Payment
         }
     }
 
-    function request(PaymentObject $paymentObject, $endpoint = null)
+    function request(PaymentObject $paymentObject, $endpoint = null, $redirect = true)
     {
         $request = new GPwebpayPaymentRequest();
 
@@ -75,7 +75,12 @@ class GP_webpay extends Payment
 
         $request->signMessage(null);
 
-        return $request->getRedirectUrl();
+        if ($redirect) {
+            return $request->getRedirectUrl();
+        } else {
+            return $request->getSubmitForm();
+        }
+
     }
 
     function response($fields = null)
@@ -170,7 +175,8 @@ class GP_webpay extends Payment
             }
         }
 
-        return $sxe->asXML();
+        $result = str_replace("<?xml version=\"1.0\"?>\n", '', $sxe->asXML());
+        return trim($result);
 
     }
 }

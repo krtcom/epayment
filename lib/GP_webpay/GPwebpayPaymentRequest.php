@@ -7,7 +7,8 @@ use EPayment\EPaymentException;
 use EPayment\EPaymentMessage;
 use EPayment\Interfaces\IEPaymentHttpRedirectPaymentRequest;
 
-class GPwebpayPaymentRequest extends EPaymentMessage implements IEPaymentHttpRedirectPaymentRequest {
+class GPwebpayPaymentRequest extends EPaymentMessage implements IEPaymentHttpRedirectPaymentRequest
+{
 
     const GPwebpay_EPayment_URL_Base = "https://3dsecure.gpwebpay.com/pgw/order.do";
 
@@ -15,11 +16,13 @@ class GPwebpayPaymentRequest extends EPaymentMessage implements IEPaymentHttpRed
     private $privateKeyFile;
     private $privateKeyPass;
 
-    public function setRedirectUrlBase($url) {
+    public function setRedirectUrlBase($url)
+    {
         $this->redirectUrlBase = $url;
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->requiredFields = array('MERCHANTNUMBER', 'OPERATION', 'ORDERNUMBER', 'AMOUNT', 'CURRENCY', 'DEPOSITFLAG', 'URL');
         $this->optionalFields = array('MERORDERNUM', 'DESCRIPTION', 'MD', 'USERPARAM1', 'FASTPAYID', 'PAYMETHOD', 'DISABLEPAYMETHOD', 'PAYMETHODS', 'EMAIL', 'REFERENCENUMBER', 'ADDINFO', 'LANG');
     }
@@ -44,7 +47,12 @@ class GPwebpayPaymentRequest extends EPaymentMessage implements IEPaymentHttpRed
         $this->privateKeyPass = $privateKeyPass;
     }
 
-    protected function validateData() {
+    protected function validateData()
+    {
+
+        if (empty($this->ADDINFO)) {
+            return true;
+        }
 
         $doc = new DOMDocument();
         $doc->loadXML($this->ADDINFO);
@@ -56,7 +64,8 @@ class GPwebpayPaymentRequest extends EPaymentMessage implements IEPaymentHttpRed
         return true;
     }
 
-    protected function getSignatureBase() {
+    protected function getSignatureBase()
+    {
         $signFields = array_filter($this->fields);
         unset($signFields["LANG"]);
         return implode("|", $signFields);
@@ -66,7 +75,8 @@ class GPwebpayPaymentRequest extends EPaymentMessage implements IEPaymentHttpRed
      * @param $sharedSecret
      * @throws EPaymentException
      */
-    public function signMessage($sharedSecret) {
+    public function signMessage($sharedSecret)
+    {
 
         if (!$this->isValid) {
             throw new EPaymentException(__METHOD__ . ": Message was not validated.");
@@ -79,12 +89,26 @@ class GPwebpayPaymentRequest extends EPaymentMessage implements IEPaymentHttpRed
         openssl_sign($this->getSignatureBase(), $signature, $pkeyid);
         $signature = base64_encode($signature);
         openssl_free_key($pkeyid);
-        $this->fields["DIGEST"] =  $signature;
+        $this->fields["DIGEST"] = $signature;
     }
 
-    public function getRedirectUrl() {
+    public function getRedirectUrl()
+    {
         return $this->redirectUrlBase . '?' . http_build_query(array_filter($this->fields));
     }
 
-    public function computeSign($sharedSecret) {}
+    public function getSubmitForm()
+    {
+        $result = '<form action="' . $this->redirectUrlBase . '" id="opsubmitform">';
+        foreach ($this->fields as $field => $value) {
+            $result .= '<input type="hidden" name="' . $field . '" value="' . htmlspecialchars($value) . '" />';
+        }
+        $result .= '</form><script>document.getElementById("opsubmitform").submit();</script>';
+
+        return $result;
+    }
+
+    public function computeSign($sharedSecret)
+    {
+    }
 }
