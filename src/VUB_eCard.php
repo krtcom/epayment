@@ -4,6 +4,7 @@ namespace EPayments;
 
 
 use EPayment\EPaymentException;
+use EPayment\EPaymentLog;
 use EPayment\VUB_eCard\VUBeCardPaymentRequest;
 use EPayment\VUB_eCard\VUBeCardPaymentResponse;
 
@@ -62,10 +63,14 @@ class VUB_eCard extends Payment
 
         $request->signMessage(EPAYMENT_VUB_ECARD_STORE_KEY);
 
-        return [
+        $returnValue = [
             'action' => $request->getUrlBase(),
             'fields' => $request->getPaymentRequestFields()
         ];
+
+        EPaymentLog::log("VUB_eCard REQUEST:\n" . json_encode($returnValue));
+
+        return $returnValue;
     }
 
     /**
@@ -77,6 +82,8 @@ class VUB_eCard extends Payment
     {
 
         $response = new VUBeCardPaymentResponse($fields);
+
+        EPaymentLog::log("VUB_eCard RESPONSE:\n" . json_encode($response));
 
         $response->validate();
 
