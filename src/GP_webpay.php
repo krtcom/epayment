@@ -142,7 +142,9 @@ class GP_webpay extends Payment
             $billingDetails->addChild('postalCode', $paymentObject->BillToPostalCode);
             $billingDetails->addChild('country', $paymentObject->BillToCountryISO);
             if (!empty($paymentObject->BillToPhone)) {
-                $billingDetails->addChild('phone', $paymentObject->BillToPhone);
+                $billToPhone = str_replace("+", "00", $paymentObject->BillToPhone);
+                $billToPhone = preg_replace('/\D+/', '', $billToPhone);
+                $billingDetails->addChild('phone', $billToPhone);
             }
             if (!empty($paymentObject->BillToEmail)) {
                 $billingDetails->addChild('email', $paymentObject->BillToEmail);
@@ -165,7 +167,9 @@ class GP_webpay extends Payment
             $shippingDetails->addChild('postalCode', $paymentObject->ShipToPostalCode);
             $shippingDetails->addChild('country', $paymentObject->ShipToCountryISO);
             if (!empty($paymentObject->ShipToPhone)) {
-                $shippingDetails->addChild('phone', $paymentObject->ShipToPhone);
+                $shipToPhone = str_replace("+", "00", $paymentObject->ShipToPhone);
+                $shipToPhone = preg_replace('/\D+/', '', $shipToPhone);
+                $shippingDetails->addChild('phone', $shipToPhone);
             }
             if (!empty($paymentObject->ShipToEmail)) {
                 $shippingDetails->addChild('email', $paymentObject->ShipToEmail);
