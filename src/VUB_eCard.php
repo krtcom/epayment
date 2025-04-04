@@ -94,4 +94,24 @@ class VUB_eCard extends Payment
         return $response->getPaymentResponse();
 
     }
+
+    /**
+     * @param $fields
+     * @return PaymentResponseObject
+     * @throws EPaymentException
+     */
+    function responseObject($fields = null)
+    {
+        $response = new VUBeCardPaymentResponse($fields);
+
+        EPaymentLog::log("VUB_eCard RESPONSE:\n" . json_encode($response));
+
+        $response->validate();
+
+        $response->verifySignature(EPAYMENT_VUB_ECARD_STORE_KEY);
+
+        $this->responseMessage = $response->ErrMsg ?: $response->mdErrorMsg;
+
+        return new PaymentResponseObject(null, $response->ReturnOid, $response->xid, $response->getPaymentResponse(), $this->responseMessage);
+    }
 }
