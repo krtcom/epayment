@@ -11,13 +11,15 @@ class PaymentResponseObject
     public $variableSymbol;
     public $transactionId;
     public $result;
+    public $message;
 
-    public function __construct($amount = null, $variableSymbol = null, $transactionId = null, $result = null)
+    public function __construct($amount = null, $variableSymbol = null, $transactionId = null, $result = null, $message = null)
     {
         $this->amount = $amount;
         $this->variableSymbol = $variableSymbol;
         $this->transactionId = $transactionId;
         $this->result = $result;
+        $this->message = $message;
     }
 }
 
