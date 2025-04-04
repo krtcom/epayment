@@ -34,8 +34,10 @@ abstract class Payment
     /**
      * @param null $fields
      * @return PaymentResponseObject
+     * @throws EPaymentException
      */
-    function responseObject($fields = null) {
-        return new PaymentResponseObject();
+    function responseObject($fields = null)
+    {
+        return new PaymentResponseObject(null, null, null, $this->response($fields));
     }
 }
